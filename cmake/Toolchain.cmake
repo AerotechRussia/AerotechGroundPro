@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------
-# QGroundControl Toolchain Configuration
+# AGP Toolchain Configuration
 # Sets compiler, linker, and build tool settings
 # ----------------------------------------------------------------------------
 

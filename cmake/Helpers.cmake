@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------
-# QGroundControl CMake Helper Functions
+# AGP CMake Helper Functions
 # ----------------------------------------------------------------------------
 
 if(QGC_HELPERS_INCLUDED)

@@ -1,5 +1,5 @@
 # ============================================================================
-# QGroundControl Build Configuration Summary
+# AGP Build Configuration Summary
 # Prints a comprehensive summary of the build configuration
 # ============================================================================
 
@@ -9,7 +9,7 @@
 string(TIMESTAMP QGC_CONFIGURE_TIME "%Y-%m-%d %H:%M:%S %Z")
 message(STATUS "")
 message(STATUS "==================================================================")
-message(STATUS "QGroundControl Configuration Summary")
+message(STATUS "AGP Configuration Summary")
 message(STATUS "Generated at: ${QGC_CONFIGURE_TIME}")
 message(STATUS "==================================================================")
 

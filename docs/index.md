@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: "QGroundControl Guide"
+  name: "AGP Guide"
   tagline: For beginners, experienced users, and developers
   actions:
     - theme: brand
