@@ -1,6 +1,6 @@
-package org.mavlink.qgroundcontrol;
+package com.aerotechrussia.agp;
 
-public final class QGCUsbId {
+public final class AGPUsbId {
 
     public static final int VENDOR_PX4 = 0x26AC;
     public static final int DEVICE_PX4FMU_V1 = 0x0010;
@@ -64,7 +64,7 @@ public final class QGCUsbId {
     public static final int DEVICE_VRCORE_V10 = 0x1910;
     public static final int DEVICE_VRUBRAIN_V51 = 0x1351;
 
-    private QGCUsbId()
+    private AGPUsbId()
     {
         throw new IllegalAccessError("Non-instantiable class");
     }
