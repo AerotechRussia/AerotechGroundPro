@@ -8,16 +8,16 @@
   <project_license>Apache-2.0 OR GPL-3.0</project_license>
   <content_rating type="oars-1.1"/>
 
- <!--  <developer id="org.@QGC_APPIMAGE_APPDATA_DEVELOPER@">
+ <!--  <developer id="com.@QGC_APPIMAGE_APPDATA_DEVELOPER@">
     <name translate="no">@QGC_APPIMAGE_APPDATA_DEVELOPER@</name>
   </developer> -->
 
   <summary>@QGC_APP_DESCRIPTION@</summary>
   <description>
     <p>
-      QGroundControl (QGC) is a highly intuitive and powerful Ground Control Station (GCS) designed for UAVs.
+      AGP (AerotechGroundPro) is an advanced and powerful Ground Control Station (GCS) designed for UAVs.
       Whether you're a first-time pilot or an experienced professional,
-      QGC provides a seamless user experience for flight control and mission planning,
+      AGP provides a seamless user experience for flight control and mission planning,
       making it the go-to solution for any MAVLink-enabled drone.
     </p>
   </description>
@@ -35,18 +35,8 @@
     </release>
   </releases>
 
-  <screenshots>
-    <screenshot type="default">
-      <caption>Connected Vehicle</caption>
-      <image>https://docs.qgroundcontrol.com/master/assets/connected_vehicle.BmASIvhv.jpg</image>
-    </screenshot>
-  </screenshots>
-
   <url type="homepage">https://@QGC_ORG_DOMAIN@</url>
-  <url type="help">https://docs.qgroundcontrol.com/master/en/index.html</url>
-  <url type="bugtracker">https://github.com/mavlink/qgroundcontrol/issues</url>
-  <url type="contact">https://docs.qgroundcontrol.com/master/en/qgc-user-guide/support/support.html</url>
-  <!-- <url type="contribute">https://github.com/mavlink/qgroundcontrol/blob/master/.github/CONTRIBUTING.md</url> -->
+  <url type="bugtracker">https://github.com/AerotechRussia/AerotechGroundPro/issues</url>
 
   <requires>
     <display_length>360</display_length>

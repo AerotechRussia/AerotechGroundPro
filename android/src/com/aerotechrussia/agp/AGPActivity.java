@@ -1,4 +1,4 @@
-package org.mavlink.qgroundcontrol;
+package com.aerotechrussia.agp;
 
 import java.io.File;
 import java.util.List;
@@ -24,26 +24,26 @@ import androidx.core.content.ContextCompat;
 
 import org.qtproject.qt.android.bindings.QtActivity;
 
-public class QGCActivity extends QtActivity {
-    private static final String TAG = QGCActivity.class.getSimpleName();
-    private static final String SCREEN_BRIGHT_WAKE_LOCK_TAG = "QGroundControl";
-    private static final String MULTICAST_LOCK_TAG = "QGroundControl";
+public class AGPActivity extends QtActivity {
+    private static final String TAG = AGPActivity.class.getSimpleName();
+    private static final String SCREEN_BRIGHT_WAKE_LOCK_TAG = "AGP";
+    private static final String MULTICAST_LOCK_TAG = "AGP";
 
-    private static QGCActivity m_instance = null;
+    private static AGPActivity m_instance = null;
 
     private PowerManager.WakeLock m_wakeLock;
     private WifiManager.MulticastLock m_wifiMulticastLock;
 
-    public QGCActivity() {
+    public AGPActivity() {
         m_instance = this;
     }
 
     /**
-     * Returns the singleton instance of QGCActivity.
+     * Returns the singleton instance of AGPActivity.
      *
-     * @return The current instance of QGCActivity.
+     * @return The current instance of AGPActivity.
      */
-    public static QGCActivity getInstance() {
+    public static AGPActivity getInstance() {
         return m_instance;
     }
 
@@ -56,7 +56,7 @@ public class QGCActivity extends QtActivity {
         keepScreenOn();
         setupMulticastLock();
 
-        QGCUsbSerialManager.initialize(this);
+        AGPUsbSerialManager.initialize(this);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class QGCActivity extends QtActivity {
         try {
             releaseMulticastLock();
             releaseWakeLock();
-            QGCUsbSerialManager.cleanup(this);
+            AGPUsbSerialManager.cleanup(this);
         } catch (final Exception e) {
             Log.e(TAG, "Exception onDestroy()", e);
         }

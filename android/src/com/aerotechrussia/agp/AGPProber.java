@@ -1,11 +1,11 @@
-package org.mavlink.qgroundcontrol;
+package com.aerotechrussia.agp;
 
-import org.mavlink.qgroundcontrol.QGCUsbId;
+import com.aerotechrussia.agp.AGPUsbId;
 
 import com.hoho.android.usbserial.driver.ProbeTable;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 
-public class QGCProber
+public class AGPProber
 {
     public static UsbSerialProber getQGCProber() {
         return new UsbSerialProber(getQGCProbeTable());

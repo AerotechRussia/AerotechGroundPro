@@ -1,5 +1,5 @@
 # ============================================================================
-# QGroundControl CMake Build Configuration
+# AGP (AerotechGroundPro) CMake Build Configuration
 # ============================================================================
 
 cmake_minimum_required(VERSION 3.25)
@@ -217,7 +217,7 @@ if(QGC_CUSTOM_BUILD)
 endif()
 
 # ============================================================================
-# QGroundControl Resources
+# AGP Resources
 # ============================================================================
 
 # Note: Resources added to executable (not library) to avoid needing Q_INIT_RESOURCE()
@@ -229,7 +229,7 @@ list(APPEND QGC_RESOURCES
 )
 
 # ============================================================================
-# QGroundControl Executable Target
+# AGP Executable Target
 # ============================================================================
 
 # Create the main executable

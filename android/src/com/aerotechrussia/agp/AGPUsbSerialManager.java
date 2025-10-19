@@ -1,4 +1,4 @@
-package org.mavlink.qgroundcontrol;
+package com.aerotechrussia.agp;
 
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothDevice;
@@ -15,8 +15,8 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.*;
 
-public class QGCUsbSerialManager {
-    private static final String TAG = QGCUsbSerialManager.class.getSimpleName();
+public class AGPUsbSerialManager {
+    private static final String TAG = AGPUsbSerialManager.class.getSimpleName();
     private static final String ACTION_USB_PERMISSION = "org.mavlink.qgroundcontrol.action.USB_PERMISSION";
     private static final int BAD_DEVICE_ID = 0;
     private static final int READ_BUF_SIZE = 2048;
@@ -49,7 +49,7 @@ public class QGCUsbSerialManager {
     }
 
     /**
-     * Initializes the UsbSerialManager. Should be called once, typically from QGCActivity.onCreate().
+     * Initializes the UsbSerialManager. Should be called once, typically from AGPActivity.onCreate().
      *
      * @param context The application context.
      */
@@ -61,7 +61,7 @@ public class QGCUsbSerialManager {
 
         usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
         if (usbManager == null) {
-            QGCLogger.e(TAG, "Failed to get UsbManager");
+            AGPLogger.e(TAG, "Failed to get UsbManager");
             return;
         }
         setupUsbPermissionIntent(context);
@@ -72,14 +72,14 @@ public class QGCUsbSerialManager {
 
     /**
      * Cleans up resources by unregistering the BroadcastReceiver.
-     * Should be called when the manager is no longer needed, typically from QGCActivity.onDestroy().
+     * Should be called when the manager is no longer needed, typically from AGPActivity.onDestroy().
      */
     public static void cleanup(Context context) {
         try {
             context.unregisterReceiver(usbReceiver);
-            QGCLogger.i(TAG, "BroadcastReceiver unregistered successfully.");
+            AGPLogger.i(TAG, "BroadcastReceiver unregistered successfully.");
         } catch (final IllegalArgumentException e) {
-            QGCLogger.w(TAG, "Receiver not registered: " + e.getMessage());
+            AGPLogger.w(TAG, "Receiver not registered: " + e.getMessage());
         }
     }
 
@@ -106,7 +106,7 @@ public class QGCUsbSerialManager {
         filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
         filter.addAction(ACTION_USB_PERMISSION);
-        // TODO: Move bluetooth handling back to QGCActivity
+        // TODO: Move bluetooth handling back to AGPActivity
         filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
         filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
 
@@ -119,9 +119,9 @@ public class QGCUsbSerialManager {
                 context.registerReceiver(usbReceiver, filter);
             }
 
-            QGCLogger.i(TAG, "BroadcastReceiver registered successfully.");
+            AGPLogger.i(TAG, "BroadcastReceiver registered successfully.");
         } catch (Exception e) {
-            QGCLogger.e(TAG, "Failed to register BroadcastReceiver", e);
+            AGPLogger.e(TAG, "Failed to register BroadcastReceiver", e);
         }
     }
 
@@ -132,7 +132,7 @@ public class QGCUsbSerialManager {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            QGCLogger.i(TAG, "BroadcastReceiver USB action " + action);
+            AGPLogger.i(TAG, "BroadcastReceiver USB action " + action);
 
             switch (action) {
                 case ACTION_USB_PERMISSION:
@@ -153,7 +153,7 @@ public class QGCUsbSerialManager {
             try {
                 nativeUpdateAvailableJoysticks();
             } catch (final Exception ex) {
-                QGCLogger.e(TAG, "Exception nativeUpdateAvailableJoysticks()", ex);
+                AGPLogger.e(TAG, "Exception nativeUpdateAvailableJoysticks()", ex);
             }
         }
     };
@@ -168,10 +168,10 @@ public class QGCUsbSerialManager {
         if (device != null) {
             int deviceId = device.getDeviceId();
             if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-                QGCLogger.i(TAG, "Permission granted to " + device.getDeviceName());
+                AGPLogger.i(TAG, "Permission granted to " + device.getDeviceName());
                 addOrUpdateDevice(device);
             } else {
-                QGCLogger.i(TAG, "Permission denied for " + device.getDeviceName());
+                AGPLogger.i(TAG, "Permission denied for " + device.getDeviceName());
                 UsbDeviceResources resources = deviceResourcesMap.get(deviceId);
                 if (resources != null) {
                     nativeDeviceException(resources.classPtr, "USB Permission Denied");
@@ -193,7 +193,7 @@ public class QGCUsbSerialManager {
             if (resources != null) {
                 nativeDeviceHasDisconnected(resources.classPtr);
             }
-            QGCLogger.i(TAG, "Device detached: " + device.getDeviceName());
+            AGPLogger.i(TAG, "Device detached: " + device.getDeviceName());
         }
     }
 
@@ -218,10 +218,10 @@ public class QGCUsbSerialManager {
         UsbSerialDriver driver = findDriverByDeviceId(device.getDeviceId());
         if (driver != null) {
             if (usbManager.hasPermission(device)) {
-                QGCLogger.i(TAG, "Already have permission to use device " + device.getDeviceName());
+                AGPLogger.i(TAG, "Already have permission to use device " + device.getDeviceName());
                 addDriver(driver);
             } else {
-                QGCLogger.i(TAG, "Requesting permission to use device " + device.getDeviceName());
+                AGPLogger.i(TAG, "Requesting permission to use device " + device.getDeviceName());
                 usbManager.requestPermission(device, usbPermissionIntent);
             }
         }
@@ -258,7 +258,7 @@ public class QGCUsbSerialManager {
     public static int getDeviceId(final String deviceName) {
         UsbSerialDriver driver = findDriverByDeviceName(deviceName);
         if (driver == null) {
-            QGCLogger.w(TAG, "Attempt to get ID of unknown device " + deviceName);
+            AGPLogger.w(TAG, "Attempt to get ID of unknown device " + deviceName);
             return BAD_DEVICE_ID;
         }
 
@@ -307,7 +307,7 @@ public class QGCUsbSerialManager {
                 int deviceId = existingDriver.getDevice().getDeviceId();
                 deviceResourcesMap.remove(deviceId);
                 drivers.remove(i);
-                QGCLogger.i(TAG, "Removed stale driver for device ID " + deviceId);
+                AGPLogger.i(TAG, "Removed stale driver for device ID " + deviceId);
             }
         }
     }
@@ -339,12 +339,12 @@ public class QGCUsbSerialManager {
 
         drivers.add(newDriver);
         deviceResourcesMap.put(device.getDeviceId(), new UsbDeviceResources(newDriver));
-        QGCLogger.i(TAG, "Adding new driver for device ID " + device.getDeviceId() + ": " + deviceName);
+        AGPLogger.i(TAG, "Adding new driver for device ID " + device.getDeviceId() + ": " + deviceName);
 
         if (usbManager.hasPermission(device)) {
-            QGCLogger.i(TAG, "Already have permission to use device " + deviceName);
+            AGPLogger.i(TAG, "Already have permission to use device " + deviceName);
         } else {
-            QGCLogger.i(TAG, "Requesting permission to use device " + deviceName);
+            AGPLogger.i(TAG, "Requesting permission to use device " + deviceName);
             usbManager.requestPermission(device, usbPermissionIntent);
         }
     }
@@ -385,24 +385,24 @@ public class QGCUsbSerialManager {
         final int portIndex = 0;
 
         if (deviceId == BAD_DEVICE_ID) {
-            QGCLogger.w(TAG, "Finding port failed for invalid Device ID " + deviceId);
+            AGPLogger.w(TAG, "Finding port failed for invalid Device ID " + deviceId);
             return null;
         }
 
         UsbSerialDriver driver = findDriverByDeviceId(deviceId);
         if (driver == null) {
-            QGCLogger.w(TAG, "No driver found on device ID " + deviceId);
+            AGPLogger.w(TAG, "No driver found on device ID " + deviceId);
             return null;
         }
 
         List<UsbSerialPort> ports = driver.getPorts();
         if (ports.isEmpty()) {
-            QGCLogger.w(TAG, "No ports available on device ID " + deviceId);
+            AGPLogger.w(TAG, "No ports available on device ID " + deviceId);
             return null;
         }
 
         if (portIndex < 0 || portIndex >= ports.size()) {
-            QGCLogger.w(TAG, "Invalid port index " + portIndex + " for device ID " + deviceId);
+            AGPLogger.w(TAG, "Invalid port index " + portIndex + " for device ID " + deviceId);
             return null;
         }
 
@@ -450,7 +450,7 @@ public class QGCUsbSerialManager {
                  .append(device.getProductId()).append(":")
                  .append(device.getVendorId());
 
-        QGCLogger.i(TAG, "Formatted Device Info: " + deviceInfo.toString());
+        AGPLogger.i(TAG, "Formatted Device Info: " + deviceInfo.toString());
 
         return deviceInfo.toString();
     }
@@ -465,13 +465,13 @@ public class QGCUsbSerialManager {
     public static int open(final String deviceName, final long classPtr) {
         UsbSerialDriver driver = findDriverByDeviceName(deviceName);
         if (driver == null) {
-            QGCLogger.w(TAG, "Attempt to open unknown device " + deviceName);
+            AGPLogger.w(TAG, "Attempt to open unknown device " + deviceName);
             return BAD_DEVICE_ID;
         }
 
         List<UsbSerialPort> ports = driver.getPorts();
         if (ports.isEmpty()) {
-            QGCLogger.w(TAG, "No ports available on device " + deviceName);
+            AGPLogger.w(TAG, "No ports available on device " + deviceName);
             return BAD_DEVICE_ID;
         }
 
@@ -480,7 +480,7 @@ public class QGCUsbSerialManager {
         UsbSerialPort port = findPortByDeviceId(deviceId);
 
         if (!openDriver(port, device, deviceId, classPtr)) {
-            QGCLogger.e(TAG, "Failed to open driver for device " + deviceName);
+            AGPLogger.e(TAG, "Failed to open driver for device " + deviceName);
             nativeDeviceException(classPtr, "Failed to open driver for device: " + deviceName);
             return BAD_DEVICE_ID;
         }
@@ -494,7 +494,7 @@ public class QGCUsbSerialManager {
             resources.classPtr = classPtr;
         }
 
-        QGCLogger.d(TAG, "Port open successful: " + port.toString());
+        AGPLogger.d(TAG, "Port open successful: " + port.toString());
         return deviceId;
     }
 
@@ -510,7 +510,7 @@ public class QGCUsbSerialManager {
     private static boolean openDriver(final UsbSerialPort port, final UsbDevice device, final int deviceId, final long classPtr) {
         UsbDeviceConnection connection = usbManager.openDevice(device);
         if (connection == null) {
-            QGCLogger.w(TAG, "No Usb Device Connection");
+            AGPLogger.w(TAG, "No Usb Device Connection");
             nativeDeviceException(classPtr, "No USB device connection for device: " + device.getDeviceName());
             return false;
         }
@@ -518,7 +518,7 @@ public class QGCUsbSerialManager {
         try {
             port.open(connection);
         } catch (final IOException ex) {
-            QGCLogger.e(TAG, "Error opening driver for device " + device.getDeviceName(), ex);
+            AGPLogger.e(TAG, "Error opening driver for device " + device.getDeviceName(), ex);
             nativeDeviceException(classPtr, "Error opening driver: " + ex.getMessage());
             return false;
         }
@@ -532,7 +532,7 @@ public class QGCUsbSerialManager {
             return false;
         }
 
-        QGCLogger.d(TAG, "Port Driver open successful");
+        AGPLogger.d(TAG, "Port Driver open successful");
         return true;
     }
 
@@ -546,12 +546,12 @@ public class QGCUsbSerialManager {
      */
     private static boolean createIoManager(final int deviceId, final UsbSerialPort port, final long classPtr) {
         if (deviceResourcesMap.get(deviceId) == null) {
-            QGCLogger.w(TAG, "No resources found for device ID " + deviceId);
+            AGPLogger.w(TAG, "No resources found for device ID " + deviceId);
             return false;
         }
 
         if (deviceResourcesMap.get(deviceId).ioManager != null) {
-            QGCLogger.i(TAG, "IO Manager already exists for device ID " + deviceId);
+            AGPLogger.i(TAG, "IO Manager already exists for device ID " + deviceId);
             return true;
         }
 
@@ -560,20 +560,20 @@ public class QGCUsbSerialManager {
 
         ioManager.setReadBufferSize(Math.max(port.getReadEndpoint().getMaxPacketSize(), READ_BUF_SIZE));
 
-        QGCLogger.d(TAG, "Read Buffer Size: " + ioManager.getReadBufferSize());
-        QGCLogger.d(TAG, "Write Buffer Size: " + ioManager.getWriteBufferSize());
+        AGPLogger.d(TAG, "Read Buffer Size: " + ioManager.getReadBufferSize());
+        AGPLogger.d(TAG, "Write Buffer Size: " + ioManager.getWriteBufferSize());
 
         try {
             ioManager.setReadTimeout(0);
             ioManager.setWriteTimeout(0);
             ioManager.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO);
         } catch (final IllegalStateException e) {
-            QGCLogger.e(TAG, "IO Manager configuration error:", e);
+            AGPLogger.e(TAG, "IO Manager configuration error:", e);
             return false;
         }
 
         deviceResourcesMap.get(deviceId).ioManager = ioManager;
-        QGCLogger.d(TAG, "Serial I/O Manager created for device ID " + deviceId);
+        AGPLogger.d(TAG, "Serial I/O Manager created for device ID " + deviceId);
         return true;
     }
 
@@ -586,7 +586,7 @@ public class QGCUsbSerialManager {
     public static boolean startIoManager(final int deviceId) {
         UsbDeviceResources resources = deviceResourcesMap.get(deviceId);
         if (resources == null || resources.ioManager == null) {
-            QGCLogger.w(TAG, "IO Manager not found for device ID " + deviceId);
+            AGPLogger.w(TAG, "IO Manager not found for device ID " + deviceId);
             return false;
         }
 
@@ -597,10 +597,10 @@ public class QGCUsbSerialManager {
 
         try {
             resources.ioManager.start();
-            QGCLogger.d(TAG, "Serial I/O Manager started for device ID " + deviceId);
+            AGPLogger.d(TAG, "Serial I/O Manager started for device ID " + deviceId);
             return true;
         } catch (final IllegalStateException e) {
-            QGCLogger.e(TAG, "IO Manager Start exception:", e);
+            AGPLogger.e(TAG, "IO Manager Start exception:", e);
             return false;
         }
     }
@@ -623,7 +623,7 @@ public class QGCUsbSerialManager {
         }
 
         resources.ioManager.stop();
-        QGCLogger.d(TAG, "Serial I/O Manager stopped for device ID " + deviceId);
+        AGPLogger.d(TAG, "Serial I/O Manager stopped for device ID " + deviceId);
         return true;
     }
 
@@ -652,18 +652,18 @@ public class QGCUsbSerialManager {
     public static boolean close(int deviceId) {
         UsbDeviceResources resources = deviceResourcesMap.get(deviceId);
         if (resources == null) {
-            QGCLogger.w(TAG, "Attempted to close a non-existent device ID " + deviceId);
+            AGPLogger.w(TAG, "Attempted to close a non-existent device ID " + deviceId);
             return false;
         }
 
         UsbSerialPort port = findPortByDeviceId(deviceId);
         if (port == null) {
-            QGCLogger.w(TAG, "Attempted to close a null port for device ID " + deviceId);
+            AGPLogger.w(TAG, "Attempted to close a null port for device ID " + deviceId);
             return false;
         }
 
         if (!port.isOpen()) {
-            QGCLogger.w(TAG, "Attempted to close an already closed port for device ID " + deviceId);
+            AGPLogger.w(TAG, "Attempted to close an already closed port for device ID " + deviceId);
             return false;
         }
 
@@ -672,10 +672,10 @@ public class QGCUsbSerialManager {
 
         try {
             port.close();
-            QGCLogger.d(TAG, "Device " + deviceId + " closed successfully.");
+            AGPLogger.d(TAG, "Device " + deviceId + " closed successfully.");
             return true;
         } catch (final IOException ex) {
-            QGCLogger.e(TAG, "Error closing driver:", ex);
+            AGPLogger.e(TAG, "Error closing driver:", ex);
             return false;
         }
     }
@@ -692,12 +692,12 @@ public class QGCUsbSerialManager {
     public static int write(final int deviceId, final byte[] data, final int length, final int timeoutMSec) {
         UsbSerialPort port = findPortByDeviceId(deviceId);
         if (port == null) {
-            QGCLogger.w(TAG, "Attempted to write to a null port for device ID " + deviceId);
+            AGPLogger.w(TAG, "Attempted to write to a null port for device ID " + deviceId);
             return -1;
         }
 
         if (!port.isOpen()) {
-            QGCLogger.w(TAG, "Attempted to write to a closed port for device ID " + deviceId);
+            AGPLogger.w(TAG, "Attempted to write to a closed port for device ID " + deviceId);
             return -1;
         }
 
@@ -705,10 +705,10 @@ public class QGCUsbSerialManager {
             port.write(data, length, timeoutMSec);
             return length;
         } catch (final SerialTimeoutException e) {
-            QGCLogger.e(TAG, "Write timeout occurred", e);
+            AGPLogger.e(TAG, "Write timeout occurred", e);
             return -1;
         } catch (final IOException e) {
-            QGCLogger.e(TAG, "Error writing data", e);
+            AGPLogger.e(TAG, "Error writing data", e);
             return -1;
         }
     }
@@ -724,12 +724,12 @@ public class QGCUsbSerialManager {
     public static int writeAsync(final int deviceId, final byte[] data, final int timeoutMSec) {
         UsbDeviceResources resources = deviceResourcesMap.get(deviceId);
         if (resources == null || resources.ioManager == null) {
-            QGCLogger.w(TAG, "IO Manager not found for device ID " + deviceId);
+            AGPLogger.w(TAG, "IO Manager not found for device ID " + deviceId);
             return -1;
         }
 
         if (resources.ioManager.getReadTimeout() == 0) {
-            QGCLogger.w(TAG, "Read Timeout is 0 for writeAsync");
+            AGPLogger.w(TAG, "Read Timeout is 0 for writeAsync");
         }
 
         resources.ioManager.setWriteTimeout(timeoutMSec);
@@ -748,17 +748,17 @@ public class QGCUsbSerialManager {
      */
     public static byte[] read(final int deviceId, final int length, final int timeoutMs) {
         if (timeoutMs < 500) {
-            QGCLogger.w(TAG, "Read with timeout less than recommended minimum of 200-500ms");
+            AGPLogger.w(TAG, "Read with timeout less than recommended minimum of 200-500ms");
         }
 
         UsbSerialPort port = findPortByDeviceId(deviceId);
         if (port == null) {
-            QGCLogger.w(TAG, "Attempted to read from a null port for device ID " + deviceId);
+            AGPLogger.w(TAG, "Attempted to read from a null port for device ID " + deviceId);
             return new byte[]{};
         }
 
         if (!port.isOpen()) {
-            QGCLogger.w(TAG, "Attempted to read from a closed port for device ID " + deviceId);
+            AGPLogger.w(TAG, "Attempted to read from a closed port for device ID " + deviceId);
             return new byte[]{};
         }
 
@@ -768,7 +768,7 @@ public class QGCUsbSerialManager {
         try {
             bytesRead = port.read(buffer, timeoutMs);
         } catch (final IOException e) {
-            QGCLogger.e(TAG, "Error reading data", e);
+            AGPLogger.e(TAG, "Error reading data", e);
         }
 
         if (bytesRead < length) {
@@ -791,22 +791,22 @@ public class QGCUsbSerialManager {
     public static boolean setParameters(final int deviceId, final int baudRate, final int dataBits, final int stopBits, final int parity) {
         UsbSerialPort port = findPortByDeviceId(deviceId);
         if (port == null) {
-            QGCLogger.w(TAG, "Attempted to set parameters to a null port for device ID " + deviceId);
+            AGPLogger.w(TAG, "Attempted to set parameters to a null port for device ID " + deviceId);
             return false;
         }
 
         if (!port.isOpen()) {
-            QGCLogger.w(TAG, "Attempted to set parameters on a closed port for device ID " + deviceId);
+            AGPLogger.w(TAG, "Attempted to set parameters on a closed port for device ID " + deviceId);
             return false;
         }
 
         try {
             port.setParameters(baudRate, dataBits, stopBits, parity);
         } catch (final UnsupportedOperationException e) {
-            QGCLogger.w(TAG, "Error setting parameters" + ": " + e);
+            AGPLogger.w(TAG, "Error setting parameters" + ": " + e);
             return false;
         } catch (final IOException e) {
-            QGCLogger.e(TAG, "Error setting parameters", e);
+            AGPLogger.e(TAG, "Error setting parameters", e);
             return false;
         }
 
@@ -816,12 +816,12 @@ public class QGCUsbSerialManager {
     private static boolean getControlLine(int deviceId, UsbSerialPort.ControlLine controlLine) {
         UsbSerialPort port = findPortByDeviceId(deviceId);
         if (port == null) {
-            QGCLogger.w(TAG, "Attempted to get " + controlLine + " from a null port for device ID " + deviceId);
+            AGPLogger.w(TAG, "Attempted to get " + controlLine + " from a null port for device ID " + deviceId);
             return false;
         }
 
         if (!isControlLineSupported(port, controlLine)) {
-            QGCLogger.w(TAG, "Getting " + controlLine + " Not Supported");
+            AGPLogger.w(TAG, "Getting " + controlLine + " Not Supported");
             return false;
         }
 
@@ -843,10 +843,10 @@ public class QGCUsbSerialManager {
                     return false;
             }
         } catch (final UnsupportedOperationException e) {
-            QGCLogger.w(TAG, "Error getting " + controlLine + ": " + e);
+            AGPLogger.w(TAG, "Error getting " + controlLine + ": " + e);
             return false;
         }  catch (final IOException e) {
-            QGCLogger.e(TAG, "Error getting " + controlLine, e);
+            AGPLogger.e(TAG, "Error getting " + controlLine, e);
             return false;
         }
     }
@@ -854,12 +854,12 @@ public class QGCUsbSerialManager {
     private static boolean setControlLine(int deviceId, UsbSerialPort.ControlLine controlLine, boolean on) {
         UsbSerialPort port = findPortByDeviceId(deviceId);
         if (port == null) {
-            QGCLogger.w(TAG, "Attempted to set " + controlLine + " on a null port for device ID " + deviceId);
+            AGPLogger.w(TAG, "Attempted to set " + controlLine + " on a null port for device ID " + deviceId);
             return false;
         }
 
         if (!isControlLineSupported(port, controlLine)) {
-            QGCLogger.e(TAG, "Setting " + controlLine + " Not Supported");
+            AGPLogger.e(TAG, "Setting " + controlLine + " Not Supported");
             return false;
         }
 
@@ -872,14 +872,14 @@ public class QGCUsbSerialManager {
                     port.setRTS(on);
                     break;
                 default:
-                    QGCLogger.w(TAG, "Setting " + controlLine + " is not supported via this method.");
+                    AGPLogger.w(TAG, "Setting " + controlLine + " is not supported via this method.");
                     return false;
             }
         } catch (final UnsupportedOperationException e) {
-            QGCLogger.w(TAG, "Error setting " + controlLine + ": " + e);
+            AGPLogger.w(TAG, "Error setting " + controlLine + ": " + e);
             return false;
         } catch (final IOException e) {
-            QGCLogger.e(TAG, "Error setting " + controlLine, e);
+            AGPLogger.e(TAG, "Error setting " + controlLine, e);
             return false;
         }
 
@@ -899,7 +899,7 @@ public class QGCUsbSerialManager {
         try {
             supportedControlLines = port.getSupportedControlLines();
         } catch (final IOException e) {
-            QGCLogger.e(TAG, "Error getting supported control lines", e);
+            AGPLogger.e(TAG, "Error getting supported control lines", e);
             return false;
         }
 
@@ -997,7 +997,7 @@ public class QGCUsbSerialManager {
     public static int[] getControlLines(final int deviceId) {
         UsbSerialPort port = findPortByDeviceId(deviceId);
         if (port == null || !port.isOpen()) {
-            QGCLogger.w(TAG, "Attempted to get control lines from a null or closed port for device ID " + deviceId);
+            AGPLogger.w(TAG, "Attempted to get control lines from a null or closed port for device ID " + deviceId);
             return new int[]{};
         }
 
@@ -1006,10 +1006,10 @@ public class QGCUsbSerialManager {
         try {
             currentControlLines = port.getControlLines();
         } catch (final UnsupportedOperationException e) {
-            QGCLogger.w(TAG, "Error getting control lines: " + e);
+            AGPLogger.w(TAG, "Error getting control lines: " + e);
             return new int[]{};
         } catch (final IOException e) {
-            QGCLogger.e(TAG, "Error getting control lines", e);
+            AGPLogger.e(TAG, "Error getting control lines", e);
             return new int[]{};
         }
 
@@ -1026,13 +1026,13 @@ public class QGCUsbSerialManager {
     public static int getFlowControl(final int deviceId) {
         UsbSerialPort port = findPortByDeviceId(deviceId);
         if (port == null || !port.isOpen()) {
-            QGCLogger.w(TAG, "Attempted to get flow control from a null or closed port for device ID " + deviceId);
+            AGPLogger.w(TAG, "Attempted to get flow control from a null or closed port for device ID " + deviceId);
             return 0;
         }
 
         EnumSet<UsbSerialPort.FlowControl> supportedFlowControl = port.getSupportedFlowControl();
         if (supportedFlowControl.isEmpty()) {
-            QGCLogger.e(TAG, "Flow Control Not Supported");
+            AGPLogger.e(TAG, "Flow Control Not Supported");
             return 0;
         }
 
@@ -1053,7 +1053,7 @@ public class QGCUsbSerialManager {
         }
 
         if (flowControl < 0 || flowControl >= UsbSerialPort.FlowControl.values().length) {
-            QGCLogger.w(TAG, "Invalid flow control ordinal " + flowControl);
+            AGPLogger.w(TAG, "Invalid flow control ordinal " + flowControl);
             return false;
         }
 
@@ -1061,23 +1061,23 @@ public class QGCUsbSerialManager {
         UsbSerialPort port = findPortByDeviceId(deviceId);
 
         if (port == null || !port.isOpen()) {
-            QGCLogger.w(TAG, "Attempted to set flow control on a null or closed port for device ID " + deviceId);
+            AGPLogger.w(TAG, "Attempted to set flow control on a null or closed port for device ID " + deviceId);
             return false;
         }
 
         EnumSet<UsbSerialPort.FlowControl> supportedFlowControl = port.getSupportedFlowControl();
         if (!supportedFlowControl.contains(flowControlEnum)) {
-            QGCLogger.e(TAG, "Setting Flow Control Not Supported");
+            AGPLogger.e(TAG, "Setting Flow Control Not Supported");
             return false;
         }
 
         try {
             port.setFlowControl(flowControlEnum);
         } catch (final UnsupportedOperationException e) {
-            QGCLogger.w(TAG, "Error setting Flow Control: " + e);
+            AGPLogger.w(TAG, "Error setting Flow Control: " + e);
             return false;
         } catch (final IOException e) {
-            QGCLogger.e(TAG, "Error setting Flow Control", e);
+            AGPLogger.e(TAG, "Error setting Flow Control", e);
             return false;
         }
 
@@ -1094,17 +1094,17 @@ public class QGCUsbSerialManager {
     public static boolean setBreak(final int deviceId, final boolean on) {
         UsbSerialPort port = findPortByDeviceId(deviceId);
         if (port == null || !port.isOpen()) {
-            QGCLogger.w(TAG, "Attempted to set break on a null or closed port for device ID " + deviceId);
+            AGPLogger.w(TAG, "Attempted to set break on a null or closed port for device ID " + deviceId);
             return false;
         }
 
         try {
             port.setBreak(on);
         } catch (final UnsupportedOperationException e) {
-            QGCLogger.w(TAG, "Error setting break condition: " + e);
+            AGPLogger.w(TAG, "Error setting break condition: " + e);
             return false;
         } catch (final IOException e) {
-            QGCLogger.e(TAG, "Error setting break condition", e);
+            AGPLogger.e(TAG, "Error setting break condition", e);
             return false;
         }
 
@@ -1122,17 +1122,17 @@ public class QGCUsbSerialManager {
     public static boolean purgeBuffers(final int deviceId, final boolean input, final boolean output) {
         UsbSerialPort port = findPortByDeviceId(deviceId);
         if (port == null || !port.isOpen()) {
-            QGCLogger.w(TAG, "Attempted to purge buffers on a null or closed port for device ID " + deviceId);
+            AGPLogger.w(TAG, "Attempted to purge buffers on a null or closed port for device ID " + deviceId);
             return false;
         }
 
         try {
             port.purgeHwBuffers(input, output);
         } catch (final UnsupportedOperationException e) {
-            QGCLogger.w(TAG, "Error purging buffers: " + e);
+            AGPLogger.w(TAG, "Error purging buffers: " + e);
             return false;
         } catch (final IOException e) {
-            QGCLogger.e(TAG, "Error purging buffers", e);
+            AGPLogger.e(TAG, "Error purging buffers", e);
             return false;
         }
 
@@ -1151,7 +1151,7 @@ public class QGCUsbSerialManager {
 
         @Override
         public void onRunError(Exception e) {
-            QGCLogger.e(TAG, "Runner stopped.", e);
+            AGPLogger.e(TAG, "Runner stopped.", e);
             nativeDeviceException(classPtr, "Runner stopped: " + e.getMessage());
         }
 
@@ -1160,7 +1160,7 @@ public class QGCUsbSerialManager {
             if (isValidData(data)) {
                 nativeDeviceNewData(classPtr, data);
             } else {
-                QGCLogger.w(TAG, "Invalid data received: " + Arrays.toString(data));
+                AGPLogger.w(TAG, "Invalid data received: " + Arrays.toString(data));
             }
         }
 

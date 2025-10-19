@@ -1,7 +1,7 @@
 {
-    "name": "qgc_vitepress_docs",
+    "name": "agp_vitepress_docs",
     "version": "1.0.1",
-    "description": "QGC vitepress docs build dependencies.",
+    "description": "AGP vitepress docs build dependencies.",
     "scripts": {
         "docs:dev": "vitepress dev docs",
         "docs:build": "vitepress build docs",
@@ -14,6 +14,6 @@
     "license": "CC-BY-4.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/mavlink/qgroundcontrol"
+        "url": "https://github.com/AerotechRussia/AerotechGroundPro"
     }
 }

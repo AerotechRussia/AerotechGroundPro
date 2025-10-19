@@ -1,4 +1,4 @@
-package org.mavlink.qgroundcontrol;
+package com.aerotechrussia.agp;
 
 import android.util.Log;
 
@@ -6,7 +6,7 @@ import android.util.Log;
  * A centralized logging utility that manages log messages across the application.
  * It controls log levels and formats based on build configurations.
  */
-public class QGCLogger {
+public class AGPLogger {
     // Determine if the build is a debug build
     private static final boolean DEBUG = BuildConfig.DEBUG;
 
