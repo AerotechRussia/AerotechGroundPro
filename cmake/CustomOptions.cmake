@@ -1,5 +1,5 @@
 # ============================================================================
-# QGroundControl Build Configuration Options
+# AGP (AerotechGroundPro) Build Configuration Options
 # All options can be overridden by custom builds via CustomOverrides.cmake
 # ============================================================================
 
@@ -9,12 +9,12 @@ include(CMakeDependentOption)
 # Application Metadata
 # ============================================================================
 
-set(QGC_APP_NAME "QGroundControl" CACHE STRING "Application name")
-set(QGC_APP_COPYRIGHT "Copyright (c) 2025 QGroundControl. All rights reserved." CACHE STRING "Copyright notice")
-set(QGC_APP_DESCRIPTION "Open Source Ground Control App" CACHE STRING "Application description")
-set(QGC_ORG_NAME "QGroundControl" CACHE STRING "Organization name")
-set(QGC_ORG_DOMAIN "qgroundcontrol.com" CACHE STRING "Organization domain")
-set(QGC_PACKAGE_NAME "org.mavlink.qgroundcontrol" CACHE STRING "Package identifier")
+set(QGC_APP_NAME "AGP" CACHE STRING "Application name")
+set(QGC_APP_COPYRIGHT "Copyright (c) 2025 AerotechRussia. All rights reserved." CACHE STRING "Copyright notice")
+set(QGC_APP_DESCRIPTION "Advanced Ground Control Platform" CACHE STRING "Application description")
+set(QGC_ORG_NAME "AerotechRussia" CACHE STRING "Organization name")
+set(QGC_ORG_DOMAIN "aerotechrussia.com" CACHE STRING "Organization domain")
+set(QGC_PACKAGE_NAME "com.aerotechrussia.agp" CACHE STRING "Package identifier")
 
 # Settings version - increment to clear stored settings on next boot after incompatible changes
 set(QGC_SETTINGS_VERSION "9" CACHE STRING "Settings schema version")
@@ -109,27 +109,27 @@ option(QT_USE_TARGET_ANDROID_BUILD_DIR "Use target-specific Android build direct
 # ----------------------------------------------------------------------------
 set(QGC_MACOS_PLIST_PATH "${CMAKE_SOURCE_DIR}/deploy/macos/MacOSXBundleInfo.plist.in" CACHE FILEPATH "macOS Info.plist template path")
 set(QGC_MACOS_BUNDLE_ID "${QGC_PACKAGE_NAME}" CACHE STRING "macOS bundle identifier")
-set(QGC_MACOS_ICON_PATH "${CMAKE_SOURCE_DIR}/deploy/macos/qgroundcontrol.icns" CACHE FILEPATH "macOS application icon path")
-set(QGC_MACOS_ENTITLEMENTS_PATH "${CMAKE_SOURCE_DIR}/deploy/macos/qgroundcontrol.entitlements" CACHE FILEPATH "macOS entitlements file path")
+set(QGC_MACOS_ICON_PATH "${CMAKE_SOURCE_DIR}/deploy/macos/agp.icns" CACHE FILEPATH "macOS application icon path")
+set(QGC_MACOS_ENTITLEMENTS_PATH "${CMAKE_SOURCE_DIR}/deploy/macos/agp.entitlements" CACHE FILEPATH "macOS entitlements file path")
 option(QGC_MACOS_UNIVERSAL_BUILD "Build macOS universal binary (x86_64h + arm64)" ON)
 
 # ----------------------------------------------------------------------------
 # Linux Platform
 # ----------------------------------------------------------------------------
 option(QGC_CREATE_APPIMAGE "Create AppImage package after build" ON)
-set(QGC_APPIMAGE_ICON_256_PATH "${CMAKE_SOURCE_DIR}/deploy/linux/QGroundControl_256.png" CACHE FILEPATH "AppImage 256x256 icon path")
-set(QGC_APPIMAGE_ICON_SCALABLE_PATH "${CMAKE_SOURCE_DIR}/deploy/linux/QGroundControl.svg" CACHE FILEPATH "AppImage SVG icon path")
+set(QGC_APPIMAGE_ICON_256_PATH "${CMAKE_SOURCE_DIR}/deploy/linux/AGP_256.png" CACHE FILEPATH "AppImage 256x256 icon path")
+set(QGC_APPIMAGE_ICON_SCALABLE_PATH "${CMAKE_SOURCE_DIR}/deploy/linux/AGP.svg" CACHE FILEPATH "AppImage SVG icon path")
 set(QGC_APPIMAGE_APPRUN_PATH "${CMAKE_SOURCE_DIR}/deploy/linux/AppRun" CACHE FILEPATH "AppImage AppRun script path")
-set(QGC_APPIMAGE_DESKTOP_ENTRY_PATH "${CMAKE_SOURCE_DIR}/deploy/linux/org.mavlink.qgroundcontrol.desktop.in" CACHE FILEPATH "AppImage desktop entry path")
-set(QGC_APPIMAGE_METADATA_PATH "${CMAKE_SOURCE_DIR}/deploy/linux/org.mavlink.qgroundcontrol.appdata.xml.in" CACHE FILEPATH "AppImage metadata path")
-set(QGC_APPIMAGE_APPDATA_DEVELOPER "qgroundcontrol" CACHE STRING "AppImage developer name")
+set(QGC_APPIMAGE_DESKTOP_ENTRY_PATH "${CMAKE_SOURCE_DIR}/deploy/linux/com.aerotechrussia.agp.desktop.in" CACHE FILEPATH "AppImage desktop entry path")
+set(QGC_APPIMAGE_METADATA_PATH "${CMAKE_SOURCE_DIR}/deploy/linux/com.aerotechrussia.agp.appdata.xml.in" CACHE FILEPATH "AppImage metadata path")
+set(QGC_APPIMAGE_APPDATA_DEVELOPER "aerotechrussia" CACHE STRING "AppImage developer name")
 
 # ----------------------------------------------------------------------------
 # Windows Platform
 # ----------------------------------------------------------------------------
 set(QGC_WINDOWS_INSTALL_HEADER_PATH "${CMAKE_SOURCE_DIR}/deploy/windows/installheader.bmp" CACHE FILEPATH "Windows installer header image")
-set(QGC_WINDOWS_ICON_PATH "${CMAKE_SOURCE_DIR}/deploy/windows/WindowsQGC.ico" CACHE FILEPATH "Windows application icon")
-set(QGC_WINDOWS_RESOURCE_FILE_PATH "${CMAKE_SOURCE_DIR}/deploy/windows/QGroundControl.rc" CACHE FILEPATH "Windows resource file")
+set(QGC_WINDOWS_ICON_PATH "${CMAKE_SOURCE_DIR}/deploy/windows/WindowsAGP.ico" CACHE FILEPATH "Windows application icon")
+set(QGC_WINDOWS_RESOURCE_FILE_PATH "${CMAKE_SOURCE_DIR}/deploy/windows/AGP.rc" CACHE FILEPATH "Windows resource file")
 
 # ============================================================================
 # Qt Configuration

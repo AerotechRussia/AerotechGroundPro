@@ -1,5 +1,5 @@
 # ============================================================================
-# QGroundControl CMake Build Configuration
+# AGP (AerotechGroundPro) CMake Build Configuration
 # ============================================================================
 
 cmake_minimum_required(VERSION 3.25)

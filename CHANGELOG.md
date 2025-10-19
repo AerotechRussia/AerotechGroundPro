@@ -1,8 +1,13 @@
-# QGroundControl Change Log
+# AGP (AerotechGroundPro) Change Log
 
 > **Note:** This file only contains high‑level features or important fixes.
 
 ## [5.0] – Daily Build
+
+- **Rebranding**: Complete rebranding from QGroundControl to AGP (AerotechGroundPro)
+  - Updated all configuration files and deployment files
+  - Renamed logos and icons
+  - Updated organization name to AerotechRussia
 
 - **New UI**: Combined compass + attitude instrument for enhanced navigation.
 - **Instrument Selection**: Click on desktop or long‑press on mobile to switch instruments.

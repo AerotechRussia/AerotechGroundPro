@@ -1,9 +1,9 @@
-app-id: org.mavlink.qgroundcontrol
+app-id: com.aerotechrussia.agp
 runtime: org.gnome.Platform
 runtime-version: 47
 sdk: org.gnome.Sdk
-command: QGroundControl
-rename-appdata-file: org.mavlink.qgroundcontrol.metainfo.xml
+command: AGP
+rename-appdata-file: com.aerotechrussia.agp.metainfo.xml
 
 finish-args:
   - --socket=wayland
@@ -18,12 +18,11 @@ finish-args:
   - --filesystem=/run/udev:ro # enables firmware upload & auto connecting
 
 modules:
-  - name: QGroundControl
+  - name: AGP
     sources:
       - type: git
-        url: https://github.com/mavlink/qgroundcontrol.git
-        tag: master
-        commit: 35f7efd36e0d14e39378cc3acdbcb003b8c57921
+        url: https://github.com/AerotechRussia/AerotechGroundPro.git
+        branch: master
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
