@@ -72,6 +72,7 @@ LinkManager::LinkManager(QObject *parent)
 #ifndef QGC_NO_SERIAL_LINK
     (void) qRegisterMetaType<QGCSerialPortInfo>("QGCSerialPortInfo");
 #endif
+
 }
 
 LinkManager::~LinkManager()
@@ -92,6 +93,17 @@ void LinkManager::init()
         (void) connect(_portListTimer, &QTimer::timeout, this, &LinkManager::_updateAutoConnectLinks);
         _portListTimer->start(_autoconnectUpdateTimerMSecs); // timeout must be long enough to get past bootloader on second pass
     }
+
+    _createILASLink();
+}
+
+void LinkManager::_createILASLink()
+{
+    UDPConfiguration* udpConfig = new UDPConfiguration("ILAS");
+    udpConfig->setDynamic(true);
+    udpConfig->addHost("127.0.0.1", 14555);
+    SharedLinkConfigurationPtr config = addConfiguration(udpConfig);
+    createConnectedLink(config);
 }
 
 QmlObjectListModel *LinkManager::_qmlLinkConfigurations()

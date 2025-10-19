@@ -340,6 +340,20 @@ ApplicationWindow {
                     }
 
                     SubMenuButton {
+                        height:             toolSelectDialog._toolButtonHeight
+                        Layout.fillWidth:   true
+                        text:               "Toggle ILAS"
+                        checkable:          true
+                        onClicked: {
+                            if (checked) {
+                                ilasManager.start()
+                            } else {
+                                ilasManager.stop()
+                            }
+                        }
+                    }
+
+                    SubMenuButton {
                         id:                 analyzeButton
                         height:             toolSelectDialog._toolButtonHeight
                         Layout.fillWidth:   true

@@ -32,6 +32,7 @@ class QmlObjectListModel;
 class QTimer;
 class SerialLink;
 class UDPConfiguration;
+
 class UdpIODevice;
 
 /// @brief Manage communication links
@@ -138,6 +139,7 @@ private:
     void _addUDPAutoConnectLink();
     void _addMAVLinkForwardingLink();
     void _createDynamicForwardLink(const char *linkName, const QString &hostName);
+    void _createILASLink();
 #ifdef QGC_ZEROCONF_ENABLED
     void _addZeroConfAutoConnectLink();
 #endif

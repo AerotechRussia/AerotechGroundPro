@@ -17,6 +17,8 @@
 #include <QtCore/QTranslator>
 #include <QtWidgets/QApplication>
 
+#include "ILAS/ILASManager.h"
+
 namespace QGCCommandLineParser {
     struct CommandLineParseResult;
 }
@@ -98,6 +100,8 @@ public:
     void init();
     void shutdown();
 
+    ILASManager *ilasManager() const { return _ilasManager; }
+
     /// Although public, these methods are internal and should only be called by UnitTest code
     QQmlApplicationEngine *qmlAppEngine() const { return _qmlAppEngine; }
 
@@ -125,6 +129,7 @@ public slots:
     QGCImageProvider *qgcImageProvider();
 
 private slots:
+    void _handleILASOutput(const QString &output);
     /// Called when the delay timer fires to show the missing parameters warning
     void _missingParamsDisplay();
     void _qgcCurrentStableVersionDownloadComplete(const QString &remoteFile, const QString &localFile, const QString &errorMsg);
@@ -191,4 +196,6 @@ private:
     static constexpr const char *_deleteAllSettingsKey = "DeleteAllSettingsNextBoot"; ///< If this settings key is set on boot, all settings will be deleted
 
     const QString _qgcImageProviderId = QStringLiteral("QGCImages");
+
+    ILASManager *_ilasManager = nullptr;
 };

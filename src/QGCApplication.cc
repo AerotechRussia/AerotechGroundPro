@@ -61,6 +61,7 @@ QGCApplication::QGCApplication(int &argc, char *argv[], const QGCCommandLinePars
     , _fakeMobile(cli.fakeMobile)
     , _logOutput(cli.logOutput)
     , _systemId(cli.systemId.value_or(0))
+    , _ilasManager(new ILASManager(this))
 {
     _msecsElapsedTime.start();
 
@@ -151,6 +152,13 @@ QGCApplication::QGCApplication(int &argc, char *argv[], const QGCCommandLinePars
 #ifndef QGC_DAILY_BUILD
     _checkForNewVersion();
 #endif
+
+    connect(_ilasManager, &ILASManager::ilasOutput, this, &QGCApplication::_handleILASOutput);
+}
+
+void QGCApplication::_handleILASOutput(const QString &output)
+{
+    qCDebug(QGCApplicationLog) << "ILAS Output:" << output;
 }
 
 void QGCApplication::setLanguage()
@@ -254,6 +262,7 @@ void QGCApplication::_initForNormalAppBoot()
     MAVLinkProtocol::instance()->init();
     MultiVehicleManager::instance()->init();
     _qmlAppEngine = QGCCorePlugin::instance()->createQmlApplicationEngine(this);
+    _qmlAppEngine->rootContext()->setContextProperty("ilasManager", _ilasManager);
     QObject::connect(_qmlAppEngine, &QQmlApplicationEngine::objectCreationFailed, this, QCoreApplication::quit, Qt::QueuedConnection);
     QGCCorePlugin::instance()->createRootWindow(_qmlAppEngine);
 
