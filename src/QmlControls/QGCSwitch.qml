@@ -9,6 +9,7 @@
 
 import QtQuick
 import QtQuick.Controls
+import Qt5Compat.GraphicalEffects
 
 import QGroundControl
 
@@ -32,20 +33,65 @@ Switch {
     }
 
     indicator: Rectangle {
-        implicitWidth: knob.width * 2
-        implicitHeight: knob.height
+        implicitWidth: knob.width * 2.2
+        implicitHeight: knob.height * 1.3
         x: control.width - width - control.rightPadding
         y: parent.height / 2 - height / 2
-        radius: knob.radius
-        color: control.checked ? qgcPal.primaryButton : qgcPal.button
+        radius: height / 2
+        color: control.checked ? qgcPal.brandingBlue : qgcPal.button
+        border.color: control.checked ? qgcPal.brandingBlue : qgcPal.buttonBorder
+        border.width: 2
+        
+        // Modern switch shadow
+        layer.enabled: true
+        layer.effect: InnerShadow {
+            horizontalOffset: 0
+            verticalOffset: 1
+            radius: 2
+            samples: 5
+            color: "#40000000"
+        }
+        
+        // Smooth color transition
+        Behavior on color {
+            ColorAnimation { duration: 200; easing.type: Easing.InOutQuad }
+        }
+        
+        Behavior on border.color {
+            ColorAnimation { duration: 200; easing.type: Easing.InOutQuad }
+        }
 
         Rectangle {
             id: knob
-            x: control.checked ? parent.width - width : 0
-            width: ScreenTools.defaultFontPixelHeight
-            height: ScreenTools.defaultFontPixelHeight
+            x: control.checked ? parent.width - width - 2 : 2
+            y: (parent.height - height) / 2
+            width: parent.height - 4
+            height: width
             radius: height / 2
-            color: qgcPal.buttonText
+            color: "white"
+            
+            // Knob shadow for depth
+            layer.enabled: true
+            layer.effect: DropShadow {
+                horizontalOffset: 0
+                verticalOffset: 2
+                radius: 4
+                samples: 9
+                color: "#80000000"
+                transparentBorder: true
+            }
+            
+            // Smooth sliding animation
+            Behavior on x {
+                NumberAnimation { duration: 200; easing.type: Easing.InOutQuad }
+            }
+            
+            // Scale effect on toggle
+            scale: control.pressed ? 1.1 : 1.0
+            
+            Behavior on scale {
+                NumberAnimation { duration: 100; easing.type: Easing.OutQuad }
+            }
         }
     }
 }

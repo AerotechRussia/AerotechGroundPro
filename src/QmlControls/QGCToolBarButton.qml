@@ -9,6 +9,7 @@
 
 import QtQuick
 import QtQuick.Controls
+import Qt5Compat.GraphicalEffects
 
 import QGroundControl
 import QGroundControl.Controls
@@ -36,6 +37,30 @@ Button {
         color:          button.checked ? qgcPal.buttonHighlight : Qt.rgba(0,0,0,0)
         border.color:   "red"
         border.width:   QGroundControl.corePlugin.showTouchAreas ? 3 : 0
+        radius:         ScreenTools.buttonBorderRadius
+        
+        // Modern hover effect for toolbar
+        Rectangle {
+            anchors.fill: parent
+            color: qgcPal.buttonHighlight
+            opacity: !button.checked && button.hovered ? 0.1 : 0
+            radius: parent.radius
+            
+            Behavior on opacity {
+                NumberAnimation { duration: 150; easing.type: Easing.InOutQuad }
+            }
+        }
+        
+        // Subtle shadow for checked state
+        layer.enabled: button.checked
+        layer.effect: DropShadow {
+            horizontalOffset: 0
+            verticalOffset: 1
+            radius: 3
+            samples: 7
+            color: "#40000000"
+            transparentBorder: true
+        }
     }
 
     contentItem: Row {
