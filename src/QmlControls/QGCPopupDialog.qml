@@ -11,6 +11,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
+import Qt5Compat.GraphicalEffects
 
 import QGroundControl
 import QGroundControl.Controls
@@ -197,14 +198,38 @@ Popup {
     }
 
     Rectangle {
+        id:             dialogBackground
         x:              mainLayout.x - _contentMargin
         y:              mainLayout.y - _contentMargin
         width:          mainLayout.width + _contentMargin * 2
         height:         mainLayout.height + _contentMargin * 2
         color:          _qgcPal.windowShade
-        radius:         root.padding / 2
-        border.width:   1
+        radius:         ScreenTools.defaultFontPixelHeight * 0.5
+        border.width:   0
         border.color:   _qgcPal.windowShadeLight
+        
+        // Modern dialog shadow
+        layer.enabled: true
+        layer.effect: DropShadow {
+            horizontalOffset: 0
+            verticalOffset: 8
+            radius: 24
+            samples: 33
+            color: "#90000000"
+            transparentBorder: true
+        }
+        
+        // Smooth scale-in animation
+        scale: root.visible ? 1.0 : 0.95
+        opacity: root.visible ? 1.0 : 0.0
+        
+        Behavior on scale {
+            NumberAnimation { duration: 200; easing.type: Easing.OutBack }
+        }
+        
+        Behavior on opacity {
+            NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
+        }
     }
 
     ColumnLayout {
@@ -224,6 +249,7 @@ Popup {
                 Layout.fillWidth:   true
                 text:               root.title
                 font.pointSize:     ScreenTools.mediumFontPointSize
+                font.weight:        Font.DemiBold
                 verticalAlignment:	Text.AlignVCenter
             }
 
