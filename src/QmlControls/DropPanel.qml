@@ -10,6 +10,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 
 import QGroundControl
 import QGroundControl.Controls
@@ -70,19 +71,45 @@ Popup {
         implicitHeight: contentItem.implicitHeight + _innerMargin * 2
 
         Rectangle {
+            id:     panelRect
             x:      _dropRight ? _arrowPointWidth : 0
             radius: ScreenTools.defaultFontPixelHeight / 2
             width:  parent.implicitWidth - _arrowPointWidth
             height: parent.implicitHeight
             color:  _qgcPal.window
+            border.color: _qgcPal.groupBorder
+            border.width: 1
+            
+            // Modern card shadow
+            layer.enabled: true
+            layer.effect: DropShadow {
+                horizontalOffset: 0
+                verticalOffset: 4
+                radius: 16
+                samples: 25
+                color: "#80000000"
+                transparentBorder: true
+            }
         }
 
         // Arrowhead
         Canvas {
+            id:     arrowCanvas
             x:      _dropRight ? 0 : parent.width - _arrowPointWidth
             y:      _arrowPointPositionY - _arrowPointWidth
             width:  _arrowPointWidth
             height: _arrowPointWidth * 2
+            
+            // Arrow shadow layer
+            layer.enabled: true
+            layer.effect: DropShadow {
+                horizontalOffset: _dropRight ? -2 : 2
+                verticalOffset: 0
+                radius: 8
+                samples: 17
+                color: "#60000000"
+                transparentBorder: true
+            }
             
             onPaint: {
                 var context = getContext("2d")

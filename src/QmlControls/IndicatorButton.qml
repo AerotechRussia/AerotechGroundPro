@@ -26,7 +26,27 @@ QGCButton {
         width:                  radius * 2
         height:                 width
         radius:                 (ScreenTools.defaultFontPixelHeight * .75) / 2
-        color:                  "red"
+        color:                  qgcPal.colorRed
         visible:                enabled && !indicatorGreen
+        
+        // Pulsing animation for attention
+        SequentialAnimation on opacity {
+            running: visible
+            loops: Animation.Infinite
+            NumberAnimation { to: 0.3; duration: 800; easing.type: Easing.InOutQuad }
+            NumberAnimation { to: 1.0; duration: 800; easing.type: Easing.InOutQuad }
+        }
+        
+        // Inner glow effect
+        Rectangle {
+            anchors.centerIn: parent
+            width: parent.width * 0.6
+            height: width
+            radius: width / 2
+            color: Qt.lighter(qgcPal.colorRed, 1.5)
+            opacity: 0.8
+        }
     }
+    
+    QGCPalette { id: qgcPal; colorGroupEnabled: enabled }
 }

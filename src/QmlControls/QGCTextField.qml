@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 
 import QGroundControl
 import QGroundControl.Controls
@@ -86,10 +87,35 @@ TextField {
     background: Rectangle {
         border.width:   control.validationError ? 2 : (qgcPal.globalTheme === QGCPalette.Light ? 1 : 0)
         border.color:   control.validationError ? qgcPal.colorRed : qgcPal.buttonBorder
-        radius:         ScreenTools.buttonBorderRadius
+        radius:         ScreenTools.buttonBorderRadius * 1.2
         color:          qgcPal.textField
         implicitWidth:  ScreenTools.implicitTextFieldWidth
         implicitHeight: ScreenTools.implicitTextFieldHeight
+
+        // Modern focus indicator
+        Rectangle {
+            anchors.fill: parent
+            radius: parent.radius
+            color: "transparent"
+            border.width: control.activeFocus ? 2 : 0
+            border.color: qgcPal.brandingBlue
+            opacity: 0.6
+            
+            Behavior on border.width {
+                NumberAnimation { duration: 150; easing.type: Easing.InOutQuad }
+            }
+        }
+
+        // Subtle shadow
+        layer.enabled: true
+        layer.effect: DropShadow {
+            horizontalOffset: 0
+            verticalOffset: 1
+            radius: control.activeFocus ? 6 : 2
+            samples: 7
+            color: "#20000000"
+            transparentBorder: true
+        }
 
         RowLayout {
             id:                     unitsHelpLayout
