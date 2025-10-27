@@ -9,6 +9,7 @@
 
 import QtQuick
 import QtQuick.Controls
+import Qt5Compat.GraphicalEffects
 
 import QGroundControl
 import QGroundControl.Controls
@@ -32,6 +33,8 @@ Slider {
 
     property real _implicitBarLength:   Math.round(ScreenTools.defaultFontPixelWidth * 20)
     property real _barHeight:           Math.round(ScreenTools.defaultFontPixelHeight / 3)
+    
+    QGCPalette { id: qgcPal; colorGroupEnabled: enabled }
 
     background: Rectangle {
         x:              control.horizontal ? 
@@ -46,8 +49,40 @@ Slider {
         height:         control.horizontal ? implicitHeight : control.availableHeight
         radius:         control._barHeight / 2
         color:          qgcPal.button
-        border.width:   1
+        border.width:   0
         border.color:   qgcPal.buttonText
+        
+        // Modern track with gradient
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: Qt.darker(qgcPal.button, 1.1) }
+            GradientStop { position: 1.0; color: qgcPal.button }
+        }
+        
+        // Inner shadow for depth
+        layer.enabled: true
+        layer.effect: InnerShadow {
+            horizontalOffset: 0
+            verticalOffset: 1
+            radius: 2
+            samples: 5
+            color: "#40000000"
+        }
+        
+        // Progress indicator
+        Rectangle {
+            width: control.horizontal ? control.visualPosition * parent.width : parent.width
+            height: control.horizontal ? parent.height : control.visualPosition * parent.height
+            y: control.horizontal ? 0 : parent.height - height
+            radius: parent.radius
+            color: qgcPal.brandingBlue
+            opacity: 0.8
+            
+            gradient: Gradient {
+                orientation: control.horizontal ? Gradient.Horizontal : Gradient.Vertical
+                GradientStop { position: 0.0; color: Qt.lighter(qgcPal.brandingBlue, 1.2) }
+                GradientStop { position: 1.0; color: qgcPal.brandingBlue }
+            }
+        }
     }
 
     // FIXME-QT6: Indicator portion of slider not yet supported
@@ -84,11 +119,29 @@ Slider {
         implicitWidth:  _radius * 2
         implicitHeight: _radius * 2
         color:          qgcPal.button
-        border.color:   qgcPal.buttonText
-        border.width:   1
+        border.color:   qgcPal.brandingBlue
+        border.width:   2
         radius:         _radius
 
         property real _radius: ScreenTools.isMobile ? ScreenTools.minTouchPixels / 2 : ScreenTools.defaultFontPixelHeight / 2
+
+        // Modern shadow effect for handle
+        layer.enabled: true
+        layer.effect: DropShadow {
+            horizontalOffset: 0
+            verticalOffset: 2
+            radius: 6
+            samples: 13
+            color: "#60000000"
+            transparentBorder: true
+        }
+        
+        // Scale effect on press
+        scale: control.pressed ? 1.1 : 1.0
+        
+        Behavior on scale {
+            NumberAnimation { duration: 100; easing.type: Easing.OutQuad }
+        }
 
         Label {
             text:               control.value.toFixed( control.to <= 1 ? 1 : 0)

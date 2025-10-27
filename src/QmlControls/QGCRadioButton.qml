@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import Qt5Compat.GraphicalEffects
 
 import QGroundControl
 import QGroundControl.Controls
@@ -17,12 +18,34 @@ RadioButton {
     indicator: Rectangle {
         implicitWidth:          ScreenTools.radioButtonIndicatorSize
         implicitHeight:         width
-        color:                  "white"
-        border.color:           "black"
+        color:                  control.checked ? _qgcPal.brandingBlue : "white"
+        border.color:           control.checked ? _qgcPal.brandingBlue : _qgcPal.text
+        border.width:           2
         radius:                 height / 2
         opacity:                control.enabled ? 1 : 0.5
         x:                      control.leftPadding
         y:                      parent.height / 2 - height / 2
+        
+        // Modern shadow
+        layer.enabled: true
+        layer.effect: DropShadow {
+            horizontalOffset: 0
+            verticalOffset: 1
+            radius: 3
+            samples: 7
+            color: "#40000000"
+            transparentBorder: true
+        }
+        
+        // Smooth color transition
+        Behavior on color {
+            ColorAnimation { duration: 150; easing.type: Easing.InOutQuad }
+        }
+        
+        Behavior on border.color {
+            ColorAnimation { duration: 150; easing.type: Easing.InOutQuad }
+        }
+        
         Rectangle {
             anchors.centerIn:   parent
             // Width should be an odd number to be centralized by the parent properly
@@ -30,8 +53,19 @@ RadioButton {
             height:             width
             antialiasing:       true
             radius:             height * 0.5
-            color:              "black"
+            color:              "white"
             visible:            control.checked
+            opacity:            control.checked ? 1 : 0
+            scale:              control.checked ? 1 : 0.5
+            
+            // Smooth check animation
+            Behavior on opacity {
+                NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
+            }
+            
+            Behavior on scale {
+                NumberAnimation { duration: 150; easing.type: Easing.OutBack }
+            }
         }
     }
 

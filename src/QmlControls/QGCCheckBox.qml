@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import Qt5Compat.GraphicalEffects
 
 import QGroundControl
 import QGroundControl.Controls
@@ -41,15 +42,35 @@ CheckBox {
         implicitHeight: implicitWidth
         x:              control.leftPadding
         y:              parent.height / 2 - height / 2
-        color:          control.enabled ? "white" : _qgcPal.text
-        border.color:   _qgcPal.text
-        border.width:   1
-        radius:         ScreenTools.buttonBorderRadius
+        color:          control.checked ? _qgcPal.brandingBlue : (control.enabled ? "white" : _qgcPal.text)
+        border.color:   control.checked ? _qgcPal.brandingBlue : _qgcPal.text
+        border.width:   2
+        radius:         ScreenTools.buttonBorderRadius * 1.2
         opacity:        control.checkedState === Qt.PartiallyChecked ? 0.5 : 1
+        
+        // Modern shadow
+        layer.enabled: true
+        layer.effect: DropShadow {
+            horizontalOffset: 0
+            verticalOffset: 1
+            radius: 3
+            samples: 7
+            color: "#40000000"
+            transparentBorder: true
+        }
+        
+        // Smooth color transition
+        Behavior on color {
+            ColorAnimation { duration: 150; easing.type: Easing.InOutQuad }
+        }
+        
+        Behavior on border.color {
+            ColorAnimation { duration: 150; easing.type: Easing.InOutQuad }
+        }
 
         QGCColoredImage {
             source:             "/qmlimages/checkbox-check.svg"
-            color:              "black"
+            color:              "white"
             mipmap:             true
             fillMode:           Image.PreserveAspectFit
             width:              parent.implicitWidth * 0.75
@@ -57,6 +78,18 @@ CheckBox {
             sourceSize.height:  height
             visible:            control.checked
             anchors.centerIn:   parent
+            opacity:            control.checked ? 1 : 0
+            
+            // Smooth check animation
+            Behavior on opacity {
+                NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
+            }
+            
+            scale:              control.checked ? 1 : 0.5
+            
+            Behavior on scale {
+                NumberAnimation { duration: 150; easing.type: Easing.OutBack }
+            }
         }
     }
 }

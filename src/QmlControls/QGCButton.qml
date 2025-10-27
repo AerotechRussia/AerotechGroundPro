@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 
 import QGroundControl
 import QGroundControl.Controls
@@ -49,11 +50,42 @@ Button {
         border.color:   qgcPal.buttonBorder
         color:          primary ? qgcPal.primaryButton : qgcPal.button
 
+        // Modern shadow effect
+        layer.enabled: true
+        layer.effect: DropShadow {
+            horizontalOffset: 0
+            verticalOffset: _showHighlight ? 1 : 2
+            radius: _showHighlight ? 2 : 4
+            samples: 9
+            color: "#40000000"
+            transparentBorder: true
+        }
+
         Rectangle {
             anchors.fill:   parent
             color:          qgcPal.buttonHighlight
-            opacity:        _showHighlight ? 1 : control.enabled && control.hovered ? .2 : 0
+            opacity:        _showHighlight ? 1 : control.enabled && control.hovered ? .15 : 0
             radius:         parent.radius
+            
+            // Smooth transition for hover effect
+            Behavior on opacity {
+                NumberAnimation { duration: 150; easing.type: Easing.InOutQuad }
+            }
+        }
+        
+        // Scale animation on press
+        transform: Scale {
+            origin.x: backRect.width / 2
+            origin.y: backRect.height / 2
+            xScale: _showHighlight ? 0.98 : 1
+            yScale: _showHighlight ? 0.98 : 1
+            
+            Behavior on xScale {
+                NumberAnimation { duration: 100; easing.type: Easing.OutQuad }
+            }
+            Behavior on yScale {
+                NumberAnimation { duration: 100; easing.type: Easing.OutQuad }
+            }
         }
     }
 

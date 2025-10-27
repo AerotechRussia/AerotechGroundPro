@@ -11,6 +11,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Templates as T
+import Qt5Compat.GraphicalEffects
 
 import QGroundControl
 
@@ -125,7 +126,30 @@ T.ComboBox {
         color:          qgcPal.button
         border.color:   qgcPal.buttonBorder
         border.width:   _showBorder ? 1 : 0
-        radius:         ScreenTools.buttonBorderRadius
+        radius:         ScreenTools.buttonBorderRadius * 1.2
+        
+        // Modern shadow effect
+        layer.enabled: true
+        layer.effect: DropShadow {
+            horizontalOffset: 0
+            verticalOffset: 2
+            radius: 4
+            samples: 9
+            color: "#30000000"
+            transparentBorder: true
+        }
+        
+        // Hover effect
+        Rectangle {
+            anchors.fill: parent
+            color: qgcPal.buttonHighlight
+            opacity: control.hovered ? 0.1 : 0
+            radius: parent.radius
+            
+            Behavior on opacity {
+                NumberAnimation { duration: 150; easing.type: Easing.InOutQuad }
+            }
+        }
     }
 
     popup: T.Popup {
@@ -156,6 +180,18 @@ T.ComboBox {
 
         background: Rectangle {
             color: qgcPal.window
+            radius: ScreenTools.buttonBorderRadius
+            
+            // Modern shadow for popup
+            layer.enabled: true
+            layer.effect: DropShadow {
+                horizontalOffset: 0
+                verticalOffset: 4
+                radius: 12
+                samples: 17
+                color: "#60000000"
+                transparentBorder: true
+            }
         }
     }
 }
